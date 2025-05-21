@@ -1,0 +1,41 @@
+@page "/todo"
+@using TodoBlazorApp.Data
+
+<h3>Todo List</h3>
+
+<div class="input-group mb-3">
+    <input @bind="newTodoTitle" placeholder="Add a new todo item" class="form-control" />
+    <button @onclick="AddTodo" class="btn btn-primary">Add</button>
+</div>
+
+<ul class="list-group">
+    @foreach (var todo in todos)
+    {
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+            <div>
+                <input type="checkbox" @bind="todo.IsDone" class="form-check-input me-2" />
+                <span style="@(todo.IsDone ? "text-decoration: line-through;" : "")">@todo.Title</span>
+            </div>
+            <button @onclick="() => RemoveTodo(todo)" class="btn btn-danger btn-sm">Remove</button>
+        </li>
+    }
+</ul>
+
+@code {
+    private List<TodoItem> todos = new List<TodoItem>();
+    private string? newTodoTitle;
+
+    private void AddTodo()
+    {
+        if (!string.IsNullOrWhiteSpace(newTodoTitle))
+        {
+            todos.Add(new TodoItem { Title = newTodoTitle, IsDone = false });
+            newTodoTitle = string.Empty;
+        }
+    }
+
+    private void RemoveTodo(TodoItem todoToRemove)
+    {
+        todos.Remove(todoToRemove);
+    }
+}
